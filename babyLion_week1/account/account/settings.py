@@ -58,8 +58,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'C:/Users/sunca/Desktop/lion/account/signup/templates',
-            'C:/Users/sunca/Desktop/lion/venv/Lib/site-packages/django/contrib/admin/templates',
+            'C:/Users/sunca/Desktop/lion/babyLion_week1/account/signup/templates',
+            'C:/Users/sunca/Desktop/lion/babyLion_week1/venv/Lib/site-packages/django/contrib/admin/templates',
         ],
 
         'APP_DIRS': False,
