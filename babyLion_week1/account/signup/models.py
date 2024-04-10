@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.files.storage import FileSystemStorage
+
+fs = FileSystemStorage(location='/media/photos')
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id, password=None, **extra_fields):
@@ -24,6 +27,11 @@ class CustomUser(AbstractBaseUser):
     nickname=models.CharField(max_length=10)
     password=models.CharField(max_length=100)
     phone_number=models.CharField(max_length=13)
+    age = models.IntegerField(null=True, blank=True)  
+    hobbies = models.TextField(null=True, blank=True)  
+    photo = models.ImageField(upload_to='media/', null=True, blank=True) 
+
+
 
     USERNAME_FIELD = 'id'
     is_staff = models.BooleanField(default=False)

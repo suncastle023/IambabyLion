@@ -37,3 +37,13 @@ class CustomLoginForm(forms.Form):
         user_id = self.cleaned_data.get('id')
         password = self.cleaned_data.get('password')
         return authenticate(request=None, id=user_id, password=password)
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['age', 'hobbies', 'photo', 'major', 'nickname','phone_number']
+        widgets = {
+            'photo': forms.FileInput()
+        }
+
+
