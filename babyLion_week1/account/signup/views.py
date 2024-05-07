@@ -6,6 +6,9 @@ from .forms import ProfileUpdateForm
 from django.contrib import messages
 from django.urls import reverse
 from .models import CustomUser
+from .forms import GuestbookForm
+from .models import Guestbook
+
 
 def firstpage(request):
     return render(request, 'firstpage.html')
@@ -88,3 +91,18 @@ def profile_update_view(request):
         form = ProfileUpdateForm(instance=request.user)
 
     return render(request, 'profile_update.html', {'form': form})
+
+
+def guestbook_list(request):
+    messages = Guestbook.objects.all().order_by('-created_at')
+    return render(request, 'guestbook_list.html', {'messages': messages})
+
+def add_message(request):
+    if request.method == "POST":
+        form = GuestbookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('guestbook_list')
+    else:
+        form = GuestbookForm()
+    return render(request, 'add_message.html', {'form': form})

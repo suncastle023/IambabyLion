@@ -1,0 +1,6 @@
+<h2>방명록</h2>
+{% for message in messages %}
+    <p><strong>{{ message.name }}:</strong> {{ message.message }} ({{ message.created_at }})</p>
+{% endfor %}
+
+<a href="{% url 'add_message' %}">메시지 추가</a>

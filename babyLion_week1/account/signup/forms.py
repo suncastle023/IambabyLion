@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import CustomUser
+from .models import Guestbook
 from django.contrib.auth import get_user_model, authenticate
 
 User = get_user_model()
@@ -46,4 +47,7 @@ class ProfileUpdateForm(forms.ModelForm):
             'photo': forms.FileInput()
         }
 
-
+class GuestbookForm(forms.ModelForm):
+    class Meta:
+        model = Guestbook
+        fields = ['name', 'message']
