@@ -1,14 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import  login
-from .forms import CustomLoginForm
-from .forms import  SignUpForm
-from .forms import ProfileUpdateForm
+from django.contrib.auth import login
+from .forms import CustomLoginForm, SignUpForm, ProfileUpdateForm, TodoItemForm, GuestbookForm
+from .models import CustomUser, Guestbook, TodoItem
 from django.contrib import messages
 from django.urls import reverse
-from .models import CustomUser
-from .forms import GuestbookForm
-from .models import Guestbook
-
 
 def firstpage(request):
     return render(request, 'firstpage.html')
@@ -23,7 +18,6 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
-
 
 def login_view(request):
     if request.method == "POST":
@@ -44,13 +38,11 @@ def login_view(request):
 def home(request):
     return render(request, 'home.html')
 
-
 def signup_success(request, pk=None):
     if request.user.is_authenticated:  
         user = request.user
         if pk:
             updated_user = CustomUser.objects.get(pk=pk)
-
             context = {
                 'id': updated_user.id,
                 'name': updated_user.name,
@@ -62,7 +54,6 @@ def signup_success(request, pk=None):
                 'hobbies':updated_user.hobbies,
                 'photo':updated_user.photo,
             }
-       
         else:
             context = {
                 'id': user.id,
@@ -72,7 +63,6 @@ def signup_success(request, pk=None):
                 'nickname': user.nickname,
                 'phone_number':user.phone_number,
             }
-
         return render(request, 'signup_success.html', context)
     else:
         return redirect('login_view') 
@@ -80,7 +70,6 @@ def signup_success(request, pk=None):
 def profile_update_view(request):
     if not request.user.is_authenticated:
         return redirect('login_view')  
-
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -89,13 +78,11 @@ def profile_update_view(request):
             return redirect('signup_success', pk=updated_user.pk) 
     else:
         form = ProfileUpdateForm(instance=request.user)
-
     return render(request, 'profile_update.html', {'form': form})
 
-
 def guestbook_list(request):
-    messages = Guestbook.objects.all().order_by('-created_at')
-    return render(request, 'guestbook_list.html', {'messages': messages})
+    guestbook_messages = Guestbook.objects.all().order_by('-created_at')
+    return render(request, 'guestbook_list.html', {'messages': guestbook_messages})
 
 def add_message(request):
     if request.method == "POST":
@@ -106,3 +93,32 @@ def add_message(request):
     else:
         form = GuestbookForm()
     return render(request, 'add_message.html', {'form': form})
+
+def todo_list(request):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    todo_items = TodoItem.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'todo_list.html', {'todo_items': todo_items})
+
+def add_todo_item(request):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    if request.method == "POST":
+        form = TodoItemForm(request.POST)
+        if form.is_valid():
+            todo_item = form.save(commit=False)
+            todo_item.user = request.user
+            todo_item.save()
+            return redirect('todo_list')
+    else:
+        form = TodoItemForm()
+    return render(request, 'add_todo_item.html', {'form': form})
+
+def toggle_todo_item_completed(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    todo_item = TodoItem.objects.get(id=item_id)
+    if request.user == todo_item.user:
+        todo_item.completed = not todo_item.completed
+        todo_item.save()
+    return redirect('todo_list')

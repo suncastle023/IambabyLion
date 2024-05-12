@@ -55,3 +55,12 @@ class Guestbook(models.Model):
     def __str__(self):
         return self.message[:50]
     
+
+class TodoItem(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

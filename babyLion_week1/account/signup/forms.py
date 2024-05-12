@@ -1,7 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import CustomUser
-from .models import Guestbook
+from .models import CustomUser, Guestbook, TodoItem
 from django.contrib.auth import get_user_model, authenticate
 
 User = get_user_model()
@@ -51,3 +50,13 @@ class GuestbookForm(forms.ModelForm):
     class Meta:
         model = Guestbook
         fields = ['name', 'message']
+
+
+class TodoItemForm(forms.ModelForm):
+    class Meta:
+        model = TodoItem
+        fields = ['title']
+
+    def __init__(self, *args, **kwargs):
+        super(TodoItemForm, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'form-control'})
