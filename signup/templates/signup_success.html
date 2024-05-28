@@ -66,6 +66,10 @@
         .link-button:hover {
             background-color: #FF1493; /* Deeper Pink */
         }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +93,9 @@
         
         <a class="link-button" href="{% url 'profile_update' %}">추가 정보 입력 및 수정하기</a>
         <a class="link-button" href="{% url 'firstpage' %}">Logout</a>
+        <div class="button-container">
+            <button onclick="location.href='{% url 'home' %}'">홈으로 돌아가기</button>
+        </div>
     </div>
 </body>
 </html>
